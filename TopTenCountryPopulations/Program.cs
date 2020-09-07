@@ -10,14 +10,20 @@ namespace TopTenCountryPopulations
             string filePath = @"Pop by Largest Final.csv";
             CsvReader reader = new CsvReader(filePath);
 
-            List<Country> countries = new List<Country>();
+            Dictionary<string, Country> countries = reader.ReadAllCountries();
 
-            foreach(Country country in countries)
+            Console.WriteLine("Which country code do you want to look up?");
+            string userInput = Console.ReadLine();
+
+            bool gotCountry = countries.TryGetValue(userInput, out Country country);
+            if (!gotCountry)
             {
-                Console.WriteLine($"{country.Population} : {country.Name}");
+                Console.WriteLine($"Sorry, there is no country with code, {userInput}");
             }
-
-            Console.WriteLine($"{countries.Count} countries");
+            else
+            {
+                Console.WriteLine($"{country.Name} has population {country.Population}");
+            }
         }
     }
 }
