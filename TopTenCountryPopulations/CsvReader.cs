@@ -15,9 +15,9 @@ namespace TopTenCountryPopulations
         }
 
 
-        public List<Country> ReadAllCountries()
+        public Dictionary<string, List<Country>> ReadAllCountries()
         {
-            List<Country> countries = new List<Country>();
+            var countries = new Dictionary<string, List<Country>>();
             using (var reader = File.OpenText(_csvFilePath))
             {
                 //call read line onece to get rid of header file
@@ -26,7 +26,15 @@ namespace TopTenCountryPopulations
                 while ((csvLine = reader.ReadLine()) != null)
                 {
                     Country country = ReadCountryFromCsvLine(csvLine);
-                    countries.Add(country);
+                    if (countries.ContainsKey(country.Region))
+                    {
+                        countries[country.Region].Add(country);
+                    }
+                    else
+                    {
+                        List<Country> RegionalCountries = new List<Country>() { country };
+                        countries.Add(country.Region, RegionalCountries);
+                    }
                 }
             }
 
